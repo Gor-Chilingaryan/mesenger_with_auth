@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './registartion.module.css'
+import style from './registration.module.css'
 import InputWithLabel from '../../components/input-label/InputWithLabel'
 import { Link } from 'react-router-dom'
 import ValidationMessages from '../../components/validation-message/ValidationMessage'
@@ -13,6 +13,7 @@ function Registration() {
 		handleBlur,
 		handleRegistration,
 		handleChange,
+		serverError,
 	} = useRegistrationForm()
 
 	return (
@@ -90,12 +91,11 @@ function Registration() {
 							Sign Up
 						</button>
 					</div>
+					{serverError && <div className={style.error_message_server}>{serverError}</div>}
 
-					<nav>
-						<Link to='/' className={style.sign_in_link}>
-							Sign In
-						</Link>
-					</nav>
+					<Link to='/' className={style.sign_in_link}>
+						Sign In
+					</Link>
 				</form>
 			</div>
 		</div>

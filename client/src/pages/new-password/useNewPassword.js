@@ -10,20 +10,44 @@ function useNewPassword() {
   const email = location.state?.email
 
   useEffect(() => {
-    if (!email) {
-      navigate('/forgot-password')
+    const token = localStorage.getItem('token')
+    if (token) {
+      navigate('/homepage', { replace: true })
     }
-  }, [email, navigate])
+  }, [navigate])
 
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
   })
+
   const [validationStatus, setValidationStatus] = useState({
     password: null,
     confirmPassword: null,
   })
+
   const [serverError, setServerError] = useState(null)
+
+
+  const validateForm = () => {
+    const statuses = {
+      password: validationRules.password(formData.password) ? 'valid' : 'invalid',
+      confirmPassword: validationRules.confirmPassword(formData.confirmPassword, formData.password) ? 'valid' : 'invalid',
+    }
+    setValidationStatus(statuses)
+    return statuses.password === 'valid' && statuses.confirmPassword === 'valid'
+  }
+
+
+
+  useEffect(() => {
+    if (!email) {
+      navigate('/forgot-password')
+    }
+  }, [email, navigate])
+
+
+
   const isFormValid = validationStatus.password === 'valid'
     && validationStatus.confirmPassword === 'valid'
 
@@ -53,7 +77,9 @@ function useNewPassword() {
 
   const handleSavePassword = async e => {
     e.preventDefault()
-    if (!isFormValid || !email) return
+
+    const isValid = validateForm()
+    if (!isValid || !email) return
 
     setServerError(null)
 

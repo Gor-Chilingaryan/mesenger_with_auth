@@ -54,12 +54,14 @@ function NewPassword() {
 						>
 							Save
 						</button>
-						<div className={style.error_message_server}>{serverError}</div>
-						<nav>
-							<Link to='/' className={style.sign_in_link}>
-								Sign In
-							</Link>
-						</nav>
+
+						{serverError && (
+							<div className={style.error_message_server}>{serverError}</div>
+						)}
+
+						<Link to='/' className={style.sign_in_link}>
+							Sign In
+						</Link>
 					</div>
 				</form>
 			</div>

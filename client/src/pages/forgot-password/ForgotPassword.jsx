@@ -13,6 +13,7 @@ function ForgotPassword() {
 		handleBlur,
 		handleChange,
 		handleForgotPas,
+		serverError,
 	} = useForgotPass()
 
 	return (
@@ -49,12 +50,13 @@ function ForgotPassword() {
 							Send
 						</button>
 					</div>
+					{serverError && (
+						<div className={style.error_message_server}>{serverError}</div>
+					)}
 
-					<nav>
-						<Link className={style.sign_in_link} to='/'>
-							Sign In
-						</Link>
-					</nav>
+					<Link className={style.sign_in_link} to='/'>
+						Sign In
+					</Link>
 				</form>
 			</div>
 		</div>

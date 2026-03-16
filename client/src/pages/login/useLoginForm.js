@@ -1,17 +1,38 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { validationRules } from '../../components/validation-message/ValidationMessage'
 import { loginUser } from '../../api/requests'
+import { useNavigate } from 'react-router-dom'
 
 const useLoginForm = () => {
+	const navigate = useNavigate()
 	const [formData, setFormData] = useState({ email: '', password: '' })
 	const [validationStatus, setValidationStatus] = useState({
 		email: null,
 		password: null,
 	})
+	const [serverError, setServerError] = useState(null)
 
+	useEffect(() => {
+		const token = localStorage.getItem('token')
+		if (token) {
+			navigate('/homepage', { replace: true })
+		}
+	},[navigate])
 
 	const isFormValid =
 		validationStatus.email === 'valid' && validationStatus.password === 'valid'
+
+	const validateForm = () => {
+		const emailValid = validationRules.email(formData.email) ? "valid" : 'invalid'
+		const passwordValid = validationRules.password(formData.password) ? 'valid' : 'invalid'
+
+		setValidationStatus({
+			email: emailValid,
+			password: passwordValid,
+		})
+		return emailValid === 'valid' && passwordValid === 'valid'
+	}
+
 
 	const handleBlur = e => {
 		const { name, value } = e.target
@@ -27,20 +48,21 @@ const useLoginForm = () => {
 	const handleSignIn = async e => {
 		e.preventDefault()
 
-		if (
-			validationStatus.email !== 'valid' ||
-			validationStatus.password !== 'valid'
-		) {
-			return
-		}
+
+		const isValid = validateForm()
+
+		if (!isValid) return
 
 		try {
 			const data = await loginUser(formData)
 
 			localStorage.setItem('token', data.token)
-			console.log('all right')
+
+			setServerError(null)
+
+			navigate('/homepage')
 		} catch (err) {
-			console.log(err.message || 'An error occurred')
+			setServerError(err.message || 'An error occurred')
 		}
 	}
 
@@ -51,6 +73,7 @@ const useLoginForm = () => {
 			...validationStatus,
 			[name]: null,
 		})
+		if (serverError) setServerError(null)
 	}
 
 	return {
@@ -60,6 +83,7 @@ const useLoginForm = () => {
 		handleBlur,
 		handleSignIn,
 		handleChange,
+		serverError,
 	}
 }
 export { useLoginForm }

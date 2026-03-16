@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { validationRules } from '../../components/validation-message/ValidationMessage'
 import { forgotPassword } from '../../api/requests'
 import { useNavigate } from 'react-router-dom'
@@ -7,14 +7,32 @@ import { useNavigate } from 'react-router-dom'
 function useForgotPass() {
   const [formData, setFormData] = useState({ email: '' })
   const [validationStatus, setValidationStatus] = useState({ email: null })
+  const [serverError, setServerError] = useState(null)
+
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      navigate('/homepage', { replace: true })
+    }
+  },[navigate])
+
   const isFormValid = validationStatus.email === 'valid'
+
+  const validateForm = () => {
+    const isValid = validationRules.email(formData.email)
+    setValidationStatus({ email: isValid ? 'valid' : 'invalid' })
+    return isValid
+  }
+
 
   const handleChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
     setValidationStatus({ ...validationStatus, [name]: null })
+
+    if (serverError) setServerError(null)
   }
 
   const handleBlur = e => {
@@ -31,20 +49,30 @@ function useForgotPass() {
   const handleForgotPas = async e => {
     e.preventDefault()
 
-    if (!isFormValid) return
+    const isValid = validateForm()
+    if (!isValid) return
 
     try {
-      const data = await forgotPassword(formData.email)
+      setServerError(null)
+      await forgotPassword(formData.email)
 
       navigate('/new-password', { state: { email: formData.email } })
     } catch (err) {
-      console.error(err.message || 'An error occurred')
+      setServerError(err.message || 'An error occurred')
     }
 
 
   }
 
-  return { formData, validationStatus, isFormValid, handleBlur, handleChange, handleForgotPas }
+  return {
+    formData,
+    validationStatus,
+    isFormValid,
+    handleBlur,
+    handleChange,
+    handleForgotPas,
+    serverError,
+  }
 }
 
 export { useForgotPass }

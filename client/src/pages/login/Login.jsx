@@ -13,6 +13,7 @@ function Login() {
 		handleBlur,
 		handleSignIn,
 		handleChange,
+		serverError,
 	} = useLoginForm()
 
 	return (
@@ -64,12 +65,12 @@ function Login() {
 						>
 							Sign in
 						</button>
-
-						<nav>
+						{serverError && <div className={style.error_message_server}>{serverError}</div>}
+						
 							<Link to='/registration' className={style.sign_up_link}>
 								Sign up
 							</Link>
-						</nav>
+						
 					</div>
 				</form>
 			</div>

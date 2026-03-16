@@ -1,9 +1,11 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ProtectedRoute } from './components/hoc/ProtectedRoute'
 import { Login } from './pages/login/Login'
 import { Registration } from './pages/registration/Registration'
 import ForgotPassword from './pages/forgot-password/ForgotPassword'
 import { NewPassword } from './pages/new-password/newPassword'
+import { HomePage } from './pages/home-page/HomePage'
 
 function App() {
 	return (
@@ -13,7 +15,10 @@ function App() {
 				<Route path='/registration' element={<Registration />} />
 				<Route path='/forgot-password' element={<ForgotPassword />} />
 				<Route path='/new-password' element={<NewPassword />} />
-				<Route path='/homepage' element={<Homepage />} />
+
+				<Route element={<ProtectedRoute />}>
+					<Route path='/homepage' element={<HomePage />} />
+				</Route>
 			</Routes>
 		</BrowserRouter>
 	)

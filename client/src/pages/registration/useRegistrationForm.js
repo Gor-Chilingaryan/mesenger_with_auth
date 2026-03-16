@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { validationRules } from '../../components/validation-message/ValidationMessage'
 import { registerUser } from '../../api/requests'
 
 function useRegistrationForm() {
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      navigate('/homepage', { replace: true })
+    }
+  },[navigate])
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -22,13 +29,23 @@ function useRegistrationForm() {
     confirmPassword: null,
   })
 
-  const isFormValid =
-    validationStatus.firstName === 'valid' &&
-    validationStatus.lastName === 'valid' &&
-    validationStatus.email === 'valid' &&
-    validationStatus.password === 'valid' &&
-    validationStatus.confirmPassword === 'valid'
+  const [serverError, setServerError] = useState(null)
 
+
+  const isFormValid = Object.values(validationStatus).every(status => status === 'valid')
+
+  const validateForm = () => {
+    const statuses = {
+      firstName: validationRules.firstName(formData.firstName) ? 'valid' : 'invalid',
+      lastName: validationRules.lastName(formData.lastName) ? 'valid' : 'invalid',
+      email: validationRules.email(formData.email) ? 'valid' : 'invalid',
+      password: validationRules.password(formData.password) ? 'valid' : 'invalid',
+      confirmPassword: validationRules.confirmPassword(formData.confirmPassword, formData.password) ? 'valid' : 'invalid',
+    }
+    setValidationStatus(statuses)
+
+    return Object.values(statuses).every(status => status === 'valid')
+  }
 
   const handleBlur = e => {
     const { name, value } = e.target
@@ -49,15 +66,21 @@ function useRegistrationForm() {
 
   const handleRegistration = async e => {
     e.preventDefault()
-    if (!isFormValid) return
+
+    const isValid = validateForm()
+
+    if (!isValid) return
 
     try {
-      const data = await registerUser(formData)
+      const { confirmPassword, ...registerData } = formData
+      const data = await registerUser(registerData)
+
+
       localStorage.setItem('token', data.token)
+
       navigate('/homepage')
-      console.log('Registration successful')
     } catch (err) {
-      console.error(err.message || 'Registration failed')
+      setServerError(err.message || 'Registration failed')
     }
   }
 
@@ -74,6 +97,8 @@ function useRegistrationForm() {
 
       return newStatus
     })
+
+    if (serverError) setServerError(null)
   }
 
   return {
@@ -83,6 +108,7 @@ function useRegistrationForm() {
     handleBlur,
     handleRegistration,
     handleChange,
+    serverError,
   }
 }
 
