@@ -6,8 +6,10 @@ import penIcon from '../../../assets/icons/pen.svg'
 import { useNavigation } from './useNavigation'
 
 function Navigation() {
-	const { navItems, error } = useNavigation()
-	if (error) return <div>{error}</div>
+	const { navItems, error, isLoding } = useNavigation()
+
+	if (isLoding) return <span className={style.loader}></span>
+	if (error) return <div className={style.error}>{error}</div>
 
 	return (
 		<div className={style.navigation_container}>
