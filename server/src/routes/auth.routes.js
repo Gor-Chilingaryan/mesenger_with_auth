@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerController, loginUserController, forgotPasswordController, newPasswordController } from '../controllers/auth.controller.js'
+import { registerController, loginUserController, forgotPasswordController, newPasswordController, refreshTokenController } from '../controllers/auth.controller.js'
 
 
 //isolated route handler.
@@ -10,6 +10,7 @@ router.post('/registration', registerController)
 router.post('/login', loginUserController)
 router.post('/forgot-password', forgotPasswordController)
 router.patch('/new-password', newPasswordController)
+router.post('/refresh', refreshTokenController)
 
 
 

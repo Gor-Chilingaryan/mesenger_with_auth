@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 import userModel from "../models/userSchema.js"
-import { createToken } from "../utils/createToken.js"
+import { generateTokens } from "../utils/createToken.js"
+
 
 export const createUserService = async (userBody) => {
   // destructuring user body
@@ -32,7 +34,7 @@ export const createUserService = async (userBody) => {
   })
 
 
-  const token = createToken(user._id)
+  const token = generateTokens(user._id)
 
   // returning user and token
   return {
@@ -42,7 +44,7 @@ export const createUserService = async (userBody) => {
       lastName: user.lastName,
       email: user.email
     },
-    token
+    ...token
   }
 }
 
@@ -76,7 +78,7 @@ export const loginUserService = async (userBody) => {
   }
 
   // creating token
-  const token = createToken(user._id)
+  const token = generateTokens(user._id)
 
   // returning user and token
   return {
@@ -84,7 +86,7 @@ export const loginUserService = async (userBody) => {
       id: user._id,
       email: user.email
     },
-    token
+    ...token
   }
 }
 
@@ -122,12 +124,32 @@ export const newPasswordService = async (email, password) => {
   user.password = hashedPassword
   await user.save()
 
+  const token = generateTokens(user._id)
   return {
     message: "Password updated successfully",
     user: {
       id: user._id,
       email: user.email
     },
-    token: createToken(user._id)
+    ...token
+  }
+}
+
+
+export const refreshService = async (refreshToken) => {
+  if (!refreshToken) {
+    throw new Error("Refresh token is required")
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET)
+    const tokens = generateTokens(decoded.userId)
+
+    return tokens
+  } catch (err) {
+    const error = new Error("Invalid or expired refresh token")
+
+    error.code = "REFRESH_EXPIRED"
+    throw error
   }
 }

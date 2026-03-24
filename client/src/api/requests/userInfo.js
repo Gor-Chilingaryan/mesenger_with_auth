@@ -15,3 +15,22 @@ export const getUserInfoRequest = async () => {
   }
 
 }
+
+export const patchUserInfoRequest = async (userBody) => {
+  try {
+    const response = await api.patch('/user-info/changes', userBody, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    return response.data
+  } catch (error) {
+    const backendError = error.response?.data
+
+    console.error('Update user info error:', backendError || error)
+
+    throw new Error(backendError?.message || 'Update user info failed')
+
+  }
+}

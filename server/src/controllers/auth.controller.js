@@ -54,3 +54,14 @@ export const newPasswordController = async (req, res) => {
     return res.status(500).json({ message: err.message })
   }
 }
+
+export const refreshTokenController = async (req, res) => {
+  try {
+    const { refreshToken } = req.body
+    const token = await refreshServices(refreshToken)
+
+    res.status(200).json(token)
+  } catch (err) {
+    res.status(401).json({ message: err.message })
+  }
+}

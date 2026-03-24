@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
-    default: '../assets/user-images/default_user.png'
+    default: '/user-images/default_user.png'
   },
   firstName: {
     type: String,

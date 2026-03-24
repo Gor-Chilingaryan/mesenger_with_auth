@@ -5,14 +5,14 @@ import {UserInfo} from '../user-info/UserInfo'
 
 function HomePage() {
 	return (
-		<>
+		<div className={style.homePage_container}>
 			<header className={style.header}>
 				<Navigation />
 			</header>
 			<main className={style.main}>
 				<UserInfo />
 			</main>
-		</>
+		</div>
 	)
 }
 

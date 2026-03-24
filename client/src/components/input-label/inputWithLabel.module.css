@@ -16,14 +16,12 @@
 	outline: none;
 }
 
-
 .label {
 	font-weight: 600;
 	font-size: 1.2rem;
 	color: #b3b3b3;
 	text-align: left;
 }
-
 
 .input {
 	width: 100%;
@@ -40,3 +38,4 @@
 
 	transition: all 0.3s ease;
 }
+

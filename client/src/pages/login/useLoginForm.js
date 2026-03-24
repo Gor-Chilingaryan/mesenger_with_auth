@@ -5,15 +5,18 @@ import { useNavigate } from 'react-router-dom'
 
 const useLoginForm = () => {
 	const navigate = useNavigate()
+
 	const [formData, setFormData] = useState({ email: '', password: '' })
 	const [validationStatus, setValidationStatus] = useState({
 		email: null,
 		password: null,
 	})
+
 	const [serverError, setServerError] = useState(null)
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
+	
 		if (token) {
 			navigate('/homepage', { replace: true })
 		}
@@ -48,18 +51,16 @@ const useLoginForm = () => {
 	const handleSignIn = async e => {
 		e.preventDefault()
 
-
 		const isValid = validateForm()
-
 		if (!isValid) return
 
 		try {
 			const data = await loginUser(formData)
 
-			localStorage.setItem('token', data.token)
+			localStorage.setItem('token', data.accessToken)
+			localStorage.setItem('refreshToken', data.refreshToken)
 
 			setServerError(null)
-
 			navigate('/homepage')
 		} catch (err) {
 			setServerError(err.message || 'An error occurred')

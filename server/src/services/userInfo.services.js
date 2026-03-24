@@ -14,7 +14,7 @@ export const getUserInfoService = async (userId) => {
     const userData = user.toObject()
 
     if (!userData.phone) {
-      userData.phone = "Please add your phone number to complete your profile"
+      userData.phone = "Please add your phone"
     }
 
     return {
@@ -28,3 +28,20 @@ export const getUserInfoService = async (userId) => {
     }
   }
 }
+
+export const patchUserInfoService = async (userId, userBody) => {
+
+  const user = await userModel.findByIdAndUpdate(userId, userBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!user) {
+    throw new Error('UserNotFound');
+  }
+
+  return {
+    status: 200,
+    json: user
+  }
+};

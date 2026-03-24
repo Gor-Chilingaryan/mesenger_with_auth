@@ -1,3 +1,75 @@
+.userInfo_container {
+	margin: 1rem auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.userInfo_avatar {
+	width: 300px;
+	height: 300px;
+
+	border-radius: 50%;
+	margin: 0 auto 1rem;
+}
+
+.addAvatarIcon {
+	cursor: pointer;
+
+	width: 2.5rem;
+	height: 2.5rem;
+
+	position: relative;
+	bottom: 100px;
+	left: 230px;
+
+	transition: all ease-in-out 0.3s;
+}
+
+.userInformation {
+	width: 400px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.addAvatarIcon:hover {
+	transform: scale(1.05);
+}
+.addAvatarIcon:active {
+	transform: scale(0.97);
+}
+
+.input {
+	width: 100%;
+
+	padding: 0.5rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+.input:disabled {
+	border: none;
+}
+
+.label {
+	font-size: 1.2rem;
+	font-weight: 600;
+	text-align: left;
+
+	padding: 0 0.5rem;
+}
+
+.logoutButton {
+	font-size: 1.3rem;
+	color: #000;
+
+	padding: 0.5rem 1rem;
+	margin: 1rem 0;
+	transition: all ease-in-out 0.3s;
+}
+
 .loader {
 	width: 100px;
 	height: 100px;
@@ -31,4 +103,75 @@
 	align-items: center;
 	justify-self: center;
 	text-align: center;
+}
+
+.editButton {
+	width: 350px;
+	height: 3rem;
+	margin: 1rem 0;
+
+	border-radius: 20px;
+	border: 1px solid #b3b3b3;
+	background-color: #b14ee0;
+
+	font-size: 1.3rem;
+	color: #fff;
+
+	transition: all ease-in-out 0.3s;
+}
+
+.editButton:hover {
+	transform: scale(1.05);
+}
+.editButton:active {
+	transform: scale(0.97);
+}
+
+.button_group {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+}
+
+.saveButton {
+	width: 150px;
+	height: 3rem;
+	margin: 1rem 0;
+
+	border-radius: 10px;
+	border: 1px solid #b3b3b3;
+	background-color: #b14ee0;
+
+	font-size: 1.3rem;
+	color: #fff;
+
+	transition: all ease-in-out 0.3s;
+}
+.saveButton:hover {
+	transform: scale(1.05);
+}
+.saveButton:active {
+	transform: scale(0.97);
+}
+
+.cancelButton {
+	width: 150px;
+	height: 3rem;
+	margin: 1rem 0;
+
+	border-radius: 10px;
+	border: 1px solid #b3b3b3;
+
+	font-size: 1.3rem;
+	color: #000;
+
+	transition: all ease-in-out 0.3s;
+}
+.cancelButton:hover {
+	transform: scale(1.05);
+}
+.cancelButton:active {
+	transform: scale(0.97);
 }

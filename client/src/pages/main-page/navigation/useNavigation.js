@@ -4,18 +4,19 @@ import { getAllNavigation } from '../../../api/requests/navigate'
 export function useNavigation() {
   const [navItems, setNavItems] = useState([])
   const [error, setError] = useState(null)
-  const [isLoding, setIsLoding] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        setIsLoding(true)
+        setIsLoading(true)
         const data = await getAllNavigation()
-        setNavItems(data)
+        setNavItems(Array.isArray(data) ? data : [])
       } catch (error) {
+        setNavItems([])
         setError(error.message)
       } finally {
-        setIsLoding(false)
+        setIsLoading(false)
       }
     }
     fetchItems()
@@ -23,6 +24,7 @@ export function useNavigation() {
 
   return {
     navItems,
-    error
+    error,
+    isLoading
   }
 }
