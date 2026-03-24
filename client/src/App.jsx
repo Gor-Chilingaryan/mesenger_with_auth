@@ -15,10 +15,10 @@ function App() {
 				<Route path='/registration' element={<Registration />} />
 				<Route path='/forgot-password' element={<ForgotPassword />} />
 				<Route path='/new-password' element={<NewPassword />} />
-
 				<Route element={<ProtectedRoute />}>
 					<Route path='/homepage' element={<HomePage />} />
 				</Route>
+				
 			</Routes>
 		</BrowserRouter>
 	)

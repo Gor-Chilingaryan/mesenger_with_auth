@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { getUserInfoRequest, patchUserInfoRequest } from '../../../api/requests/userInfo'
+import { useNavigate } from 'react-router-dom'
 
 export const useUserInfo = () => {
+  const navigate = useNavigate()
+
   const [userInfo, setUserInfo] = useState(null)
+
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+
   const [disableInput, setDisableInput] = useState(true)
 
-  const handleDesableInput = async () => {
-    setDisableInput(!disableInput)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const data = await getUserInfoRequest()
-    setUserInfo(data)
-  }
+
 
 
   useEffect(() => {
@@ -31,9 +33,23 @@ export const useUserInfo = () => {
   }, [])
 
 
+  const handleDesableInput = async () => {
+    setDisableInput(!disableInput)
+    if (!disableInput) {
+      const data = await getUserInfoRequest()
+      setUserInfo(data)
+    }
+  }
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setUserInfo(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleAvatarChange = (avatarUrl) => {
+    setUserInfo(prev => ({ ...prev, avatar: avatarUrl }))
   }
 
 
@@ -49,21 +65,28 @@ export const useUserInfo = () => {
       setIsLoading(false)
     }
   }
+
   const handleLogout = () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
     navigate('/')
   }
+
+
 
 
   return {
     userInfo,
     setUserInfo,
+    isModalOpen,
+    setIsModalOpen,
+    handleAvatarChange,
     error,
     isLoading,
     disableInput,
     handleDesableInput,
     handleChange,
     handleSaveValues,
-    handleLogout
+    handleLogout,
   }
 }

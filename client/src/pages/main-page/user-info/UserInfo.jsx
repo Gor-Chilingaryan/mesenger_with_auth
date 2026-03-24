@@ -4,12 +4,17 @@ import { useUserInfo } from './useUserInfo'
 import InputWithLabel from '../../../components/input-label/InputWithLabel'
 import { Link } from 'react-router-dom'
 import cameraPlusIcon from '../../../assets/icons/camera-plus.svg'
+import UserAvatarModal from '../../../components/user-avatar-modal/userAvatarModal'
+
 function UserInfo() {
 	const {
 		userInfo,
 		error,
 		isLoading,
+		isModalOpen,
+		setIsModalOpen,
 		handleDesableInput,
+		handleAvatarChange,
 		disableInput,
 		handleChange,
 		handleSaveValues,
@@ -55,19 +60,26 @@ function UserInfo() {
 		<div className={style.userInfo_container}>
 			<div>
 				<img
-					src={userInfo.avatar}
+					src={userInfo.avatar || '/user-images/default_user.png'}
 					alt={'User Avatar'}
 					className={style.userInfo_avatar}
 				/>
 				{!disableInput && (
 					<img
-						onClick={() => console.log('open Modal with avatars')}
+						onClick={()=>setIsModalOpen(true)}
 						src={cameraPlusIcon}
 						className={style.addAvatarIcon}
 						alt='add avatar icon'
 					/>
 				)}
 			</div>
+			{isModalOpen && (
+				<UserAvatarModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					onSelectAvatar={url => handleAvatarChange(url)}
+				/>
+			)}
 
 			<div className={style.userInformation}>
 				{userInfoData.map(field => {
