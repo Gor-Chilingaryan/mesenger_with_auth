@@ -3,13 +3,18 @@ import cors from 'cors'
 import userRouter from './routes/auth.routes.js'
 import navigateRouter from './routes/navigate.routes.js'
 import userInfoRouter from './routes/userInfo.route.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 
 // allows to share resources between different origins
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}))
 // allows to parse the body of the request
 app.use(express.json())
+app.use(cookieParser())
 
 // routes
 app.use(userRouter)

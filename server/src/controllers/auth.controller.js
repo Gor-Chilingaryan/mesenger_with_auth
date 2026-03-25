@@ -1,36 +1,46 @@
 import { createUserService, loginUserService, forgotPasswordService, newPasswordService, refreshServices } from "../services/auth.services.js"
 
-export const registerController = async (req, res) => {
-  try {
-    // create user
-    const result = await createUserService(req.body)
 
-    res.status(201).json(result)
-  } catch (err) {
-    // if user already exists
-    if (err.code === "EMAIL_EXISTS") {
-      return res.status(409).json({ message: err.message })
-    }
 
-    // if other error
-    res.status(500).json({ message: err.message })
-  }
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  path: '/'
 }
+
 
 export const loginUserController = async (req, res) => {
   try {
-    // login user
-    const result = await loginUserService(req.body)
+    const { user, accessToken, refreshToken } = await loginUserService(req.body)
 
-    res.status(200).json(result)
+    res.cookie('accessToken', accessToken, cookieOptions)
+    res.cookie('refreshToken', refreshToken, cookieOptions)
 
+    res.status(200).json(user)
   } catch (err) {
-    // if invalid credentials
     if (err.code === "INVALID_CREDENTIALS") {
       return res.status(401).json({ message: err.message })
     }
 
-    // if other error
+    res.status(500).json({ message: err.message })
+  }
+}
+
+export const registerController = async (req, res) => {
+  try {
+    // create user
+    const { user, accessToken, refreshToken } = await createUserService(req.body)
+
+    res.cookie('accessToken', accessToken, cookieOptions)
+    res.cookie('refreshToken', refreshToken, cookieOptions)
+
+    res.status(201).json(user)
+  } catch (err) {
+    if (err.code === "EMAIL_EXISTS") {
+      return res.status(409).json({ message: err.message })
+    }
+
     res.status(500).json({ message: err.message })
   }
 }
@@ -47,9 +57,12 @@ export const forgotPasswordController = async (req, res) => {
 
 export const newPasswordController = async (req, res) => {
   try {
-    const result = await newPasswordService(req.body.email, req.body.password)
+    const { accessToken, refreshToken, user } = await newPasswordService(req.body.email, req.body.password)
 
-    res.status(200).json(result)
+    res.cookie('accessToken', accessToken, cookieOptions)
+    res.cookie('refreshToken', refreshToken, cookieOptions)
+
+    res.status(200).json({ message: 'Password updated successfully', user })
   } catch (err) {
     return res.status(500).json({ message: err.message })
   }
@@ -57,10 +70,15 @@ export const newPasswordController = async (req, res) => {
 
 export const refreshTokenController = async (req, res) => {
   try {
-    const { refreshToken } = req.body
-    const token = await refreshServices(refreshToken)
+    const token = req.cookies.refreshToken
+    if (!token) throw new Error('No refresh token found')
 
-    res.status(200).json(token)
+    const { accessToken, refreshToken } = await refreshServices(token)
+
+    res.cookie('accessToken', accessToken, cookieOptions)
+    res.cookie('refreshToken', refreshToken, cookieOptions)
+
+    res.status(200).json({ message: 'Token refreshed successfully' })
   } catch (err) {
     res.status(401).json({ message: err.message })
   }

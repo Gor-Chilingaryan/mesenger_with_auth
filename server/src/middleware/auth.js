@@ -7,13 +7,11 @@ const ACCESS_SECRET = process.env.ACCESS_SECRET
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.header('Authorization');
+    const token = req.cookies.accessToken
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({ message: 'Access token missing' })
     }
-
-    const token = authHeader.replace('Bearer ', '')
 
     const decoded = jwt.verify(token, ACCESS_SECRET);
 

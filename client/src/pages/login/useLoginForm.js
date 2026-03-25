@@ -15,9 +15,9 @@ const useLoginForm = () => {
 	const [serverError, setServerError] = useState(null)
 
 	useEffect(() => {
-		const token = localStorage.getItem('token')
-	
-		if (token) {
+		const isLogged = localStorage.getItem('isLogged') === 'true'
+
+		if (isLogged) {
 			navigate('/homepage', { replace: true })
 		}
 	}, [navigate])
@@ -55,10 +55,9 @@ const useLoginForm = () => {
 		if (!isValid) return
 
 		try {
-			const data = await loginUser(formData)
+			await loginUser(formData)
 
-			localStorage.setItem('token', data.accessToken)
-			localStorage.setItem('refreshToken', data.refreshToken)
+			localStorage.setItem('isLogged', 'true')
 
 			setServerError(null)
 			navigate('/homepage')
