@@ -16,6 +16,9 @@ const homeNavigateSchema = new mongoose.Schema({
   isDefault: {
     type: Boolean,
     default: false,
+  },
+  childMenu:{ 
+    type: [],
   }
 }, { timestamps: true })
 

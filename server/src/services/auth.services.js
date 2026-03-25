@@ -136,7 +136,7 @@ export const newPasswordService = async (email, password) => {
 }
 
 
-export const refreshService = async (refreshToken) => {
+export const refreshServices = async (refreshToken) => {
   if (!refreshToken) {
     throw new Error("Refresh token is required")
   }

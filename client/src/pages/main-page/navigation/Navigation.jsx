@@ -6,7 +6,7 @@ import penIcon from '../../../assets/icons/pen.svg'
 import { useNavigation } from './useNavigation'
 
 function Navigation() {
-	const { navItems, error, isLoading } = useNavigation()
+	const { navItems, error, isLoading, handleEditNavigation } = useNavigation()
 
 	if (isLoading) return <span className={style.loader}></span>
 	if (error) return <div className={style.error}>{error}</div>
@@ -14,7 +14,7 @@ function Navigation() {
 	return (
 		<div className={style.navigation_container}>
 			<div className={style.navItems_container}>
-				{navItems.map(({ _id, name, path }) => {
+				{Array.isArray(navItems) && navItems.map(({ _id, name, path }) => {
 					return (
 						<div key={_id} className={style.navItem}>
 							<Link to={path} className={style.navItemLink}>
@@ -24,7 +24,7 @@ function Navigation() {
 					)
 				})}
 			</div>
-			<button className={style.editButton}>
+			<button className={style.editButton} onClick={handleEditNavigation}>
 				<img src={penIcon} alt='Editer icon' />
 			</button>
 		</div>

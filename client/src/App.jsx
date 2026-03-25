@@ -6,7 +6,7 @@ import { Registration } from './pages/registration/Registration'
 import ForgotPassword from './pages/forgot-password/ForgotPassword'
 import { NewPassword } from './pages/new-password/newPassword'
 import { HomePage } from './pages/main-page/home-page/HomePage'
-
+import { NavigationEdit } from './pages/main-page/navigation-edit/NavigationEdit'
 function App() {
 	return (
 		<BrowserRouter>
@@ -17,6 +17,7 @@ function App() {
 				<Route path='/new-password' element={<NewPassword />} />
 				<Route element={<ProtectedRoute />}>
 					<Route path='/homepage' element={<HomePage />} />
+					<Route path='/navigation-edit' element={<NavigationEdit />} />
 				</Route>
 				
 			</Routes>

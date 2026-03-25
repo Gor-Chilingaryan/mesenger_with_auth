@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getAllNavigation } from '../../../api/requests/navigate'
+import { useNavigate } from 'react-router-dom'
 
 export function useNavigation() {
+  const navigate = useNavigate()
   const [navItems, setNavItems] = useState([])
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -22,9 +24,14 @@ export function useNavigation() {
     fetchItems()
   }, [])
 
+  const handleEditNavigation = () => {
+    navigate('/navigation-edit')
+  }
+
   return {
     navItems,
     error,
-    isLoading
+    isLoading,
+    handleEditNavigation
   }
 }
