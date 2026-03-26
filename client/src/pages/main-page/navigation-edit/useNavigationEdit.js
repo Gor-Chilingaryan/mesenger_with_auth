@@ -1,0 +1,118 @@
+import { useEffect, useState } from 'react'
+import { getAllNavigation, deleteNavigationItem, createNavigationItem, updateNavigationItem } from '../../../api/requests/navigate'
+import {
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from '@dnd-kit/core'
+import {
+	arrayMove,
+	sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable'
+
+function useNavigationEdit() {
+	const [items, setItems] = useState([])
+	const [error, setError] = useState(null)
+	const [isLoading, setIsLoading] = useState(false)
+
+	const [formData, setFormData] = useState({ name: '', path: '' })
+
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		}),
+	)
+
+	const handleChange = (e) => {
+		const { name, value } = e.target
+		setFormData({ ...formData, [name]: value })
+	}
+
+	const handleCreateItem = async () => {
+		if (!formData.name.trim() || !formData.path.trim()) return
+
+		try {
+			const response = await createNavigationItem(formData)
+
+			const newItem = response.json || response
+			setItems((prev => [...prev, newItem]))
+			setFormData({ name: "", path: '' })
+		} catch (error) {
+			setError(error.message)
+		}
+	}
+
+	const handleDragEnd = async (event) => {
+		const { active, over } = event
+
+		if (over && active.id !== over.id) {
+			const oldIndex = items.findIndex((item) => item._id === active.id)
+			const newIndex = items.findIndex((item) => item._id === over.id)
+			const reorderedItems = arrayMove(items, oldIndex, newIndex)
+
+			setItems(reorderedItems)
+			try {
+				const dataToSave = reorderedItems.map((item, index) => ({
+					_id: item._id,
+					index: index + 1
+				}))
+
+				await updateNavigationItem(dataToSave)
+			} catch (error) {
+				const backendError = error.response?.data
+				console.error('Failed to update navigation item:', backendError || error.message)
+				throw new Error(backendError?.message || 'Failed to update navigation item')
+				setError(error.message)
+			}
+		}
+	}
+
+	const handleDeleteItem = async (id) => {
+		try {
+			const response = await deleteNavigationItem(id)
+
+			setItems((prev) => prev.filter((item) => item._id !== id))
+		} catch (error) {
+			const backenError = error.response?.data
+			console.error('Failed to delete navigation item:', backenError || error.message)
+			throw new Error(backenError?.message || 'Failed to delete navigation item')
+		}
+	}
+
+	useEffect(() => {
+		const fetchItems = async () => {
+			try {
+				setIsLoading(true)
+				const response = await getAllNavigation()
+
+				// ВАЖНО: проверяй структуру ответа от твоего API
+				// Если API возвращает { status: 200, json: [...] }, то бери response.json
+				const data = response.json || response
+
+				setItems(Array.isArray(data) ? data : [])
+			} catch (error) {
+				setItems([])
+				setError(error.message)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+		fetchItems()
+	}, [])
+
+	return {
+		handleDragEnd,
+		handleDeleteItem,
+		handleChange,
+		handleCreateItem,
+		sensors,
+		items,
+		error,
+		isLoading,
+		formData
+	}
+}
+
+export { useNavigationEdit }

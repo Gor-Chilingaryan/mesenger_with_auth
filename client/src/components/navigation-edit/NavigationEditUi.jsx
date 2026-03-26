@@ -1,3 +1,39 @@
+import React from 'react'
+import style from '../../pages/main-page/navigation-edit/NavigationEdit.module.css'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
+function SortableItem({ item, BurgerIcon, handleDeleteItem }) {
+	const { attributes, listeners, setNodeRef, transform, transition } =
+		useSortable({ id: item._id })
+
+	const initialStyle = {
+		transform: CSS.Transform.toString(transform),
+		transition,
+	}
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={initialStyle}
+			className={style.navigationEdit_list_item}
+		>
+			<div {...attributes} {...listeners} style={{ cursor: 'grab' }}>
+				<BurgerIcon />
+			</div>
+			<span className={style.navigationEdit_list_item_name}>{item.name}</span>
+			{!item.isDefault && (
+				<button
+					className={style.navigationEdit_list_item_delete}
+					onClick={handleDeleteItem}
+				>
+					X
+				</button>
+			)}
+		</div>
+	)
+}
+
 const ArrowLeft = () => (
 	<svg
 		xmlns='http://www.w3.org/2000/svg'
@@ -47,4 +83,4 @@ const BurgerIcon = () => (
 	</svg>
 )
 
-export { ArrowLeft, ChevronRight, BurgerIcon }
+export { SortableItem, ArrowLeft, ChevronRight, BurgerIcon }

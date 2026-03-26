@@ -2,7 +2,9 @@ import navigateModel from "../models/navigateSchema.js"
 
 export const getAllNavigationService = async (userId) => {
   try {
-    const items = await navigateModel.find({ owner: userId }).sort({ createdAt: 1 })
+    const items = await navigateModel
+      .find({ owner: userId })
+      .sort({ index: 1 })
 
     return {
       status: 200,
@@ -41,14 +43,6 @@ export const deleteNavigationService = async (id) => {
         json: { message: "Item not found" }
       }
     }
-
-    if (item.isDefault) {
-      return {
-        status: 400,
-        json: { message: "Default item cannot be deleted" }
-      }
-    }
-
     await navigateModel.findByIdAndDelete(id)
 
     return {
@@ -65,3 +59,14 @@ export const deleteNavigationService = async (id) => {
     }
   }
 }
+
+export const updateNavigationService = async (userId, newOrder) => {
+  const operations = newOrder.map((id, idx) => ({
+    updateOne: {
+      filter: { _id: id, owner: userId },
+      update: { $set: { index: idx + 1 } },
+    }
+  }));
+
+  return await navigateModel.bulkWrite(operations);
+};
