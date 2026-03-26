@@ -11,8 +11,8 @@ function useForgotPass() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    const isLogged = localStorage.getItem('isLogged') === 'true'
+    if (isLogged) {
       navigate('/homepage', { replace: true })
     }
   }, [navigate])

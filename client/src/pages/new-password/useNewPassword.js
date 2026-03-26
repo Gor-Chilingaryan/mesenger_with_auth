@@ -10,8 +10,8 @@ function useNewPassword() {
   const email = location.state?.email
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
+    const isLogged = localStorage.getItem('isLogged') === 'true'
+    if (isLogged) {
       navigate('/homepage', { replace: true })
     }
   }, [navigate])
@@ -81,11 +81,9 @@ function useNewPassword() {
     try {
       const data = await newPassword(email, formData.password)
 
-      localStorage.setItem('token', data.accessToken)
-      localStorage.setItem('refreshToken', data.refreshToken)
-
       console.log(data.message)
 
+      localStorage.setItem('isLogged', 'true')
       navigate('/homepage')
     } catch (err) {
       setServerError(err.message || 'An error occurred')

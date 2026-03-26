@@ -65,8 +65,6 @@ export const useUserInfo = () => {
     } catch (err) {
       console.error('Logout error:', err)
     } finally {
-      localStorage.removeItem('token')
-      localStorage.removeItem('refreshToken')
       localStorage.removeItem('isLogged')
       navigate('/')
     }

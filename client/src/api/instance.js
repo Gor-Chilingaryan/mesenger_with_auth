@@ -12,12 +12,6 @@ const instance = axios.create({
 
 
 instance.interceptors.request.use((config) => {
-  // Attach the access token for protected API calls.
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers = config.headers || {}
-    config.headers.Authorization = `Bearer ${token}`
-  }
   return config
 })
 
@@ -26,27 +20,18 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const isRefreshRequest =
+      typeof originalRequest?.url === 'string' &&
+      originalRequest.url.includes('/refresh')
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isRefreshRequest) {
       originalRequest._retry = true
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken')
-        const res = await axios.post(`${API_URL}/refresh`, { refreshToken })
-
-        if (res.status === 200 && res.data?.accessToken) {
-          localStorage.setItem('token', res.data.accessToken)
-          localStorage.setItem('refreshToken', res.data.refreshToken)
-
-          originalRequest.headers = originalRequest.headers || {}
-          originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`
-
-          return instance(originalRequest)
-        }
+        await instance.post('/refresh')
+        
+        return instance(originalRequest)
       } catch (refreshError) {
-
-
-        localStorage.removeItem('token')
-        localStorage.removeItem('refreshToken')
         localStorage.removeItem('isLogged')
 
         if (window.location.pathname !== '/') {

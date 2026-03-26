@@ -2,11 +2,13 @@ import { createUserService, loginUserService, forgotPasswordService, newPassword
 
 
 
+const isProd = process.env.NODE_ENV === 'production'
+
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: isProd,
   sameSite: 'strict',
-  path: '/'
+  path: '/',
 }
 
 
@@ -17,8 +19,8 @@ export const loginUserController = async (req, res) => {
     res.cookie('accessToken', accessToken, cookieOptions)
     res.cookie('refreshToken', refreshToken, cookieOptions)
 
-    // Also return tokens to the client (the frontend currently stores tokens in localStorage)
-    res.status(200).json({ user, accessToken, refreshToken })
+    // Refresh token is HttpOnly cookie; do not expose it to JS.
+    res.status(200).json({ user, accessToken })
   } catch (err) {
     if (err.code === "INVALID_CREDENTIALS") {
       return res.status(401).json({ message: err.message })
@@ -30,13 +32,13 @@ export const loginUserController = async (req, res) => {
 
 export const registerController = async (req, res) => {
   try {
-    // create user
+
     const { user, accessToken, refreshToken } = await createUserService(req.body)
 
     res.cookie('accessToken', accessToken, cookieOptions)
     res.cookie('refreshToken', refreshToken, cookieOptions)
 
-    res.status(201).json({ user, accessToken, refreshToken })
+    res.status(201).json({ user, accessToken })
   } catch (err) {
     if (err.code === "EMAIL_EXISTS") {
       return res.status(409).json({ message: err.message })
@@ -67,7 +69,6 @@ export const newPasswordController = async (req, res) => {
       message: 'Password updated successfully',
       user,
       accessToken,
-      refreshToken,
     })
   } catch (err) {
     return res.status(500).json({ message: err.message })
@@ -76,10 +77,8 @@ export const newPasswordController = async (req, res) => {
 
 export const refreshTokenController = async (req, res) => {
   try {
-    // Support both cookie-based and body-based refresh tokens.
-    // (Frontend sends refresh token from localStorage.)
-    const refreshToken =
-      req.body?.refreshToken || req.cookies?.refreshToken
+
+    const refreshToken = req.cookies?.refreshToken
     if (!refreshToken) throw new Error('No refresh token found')
 
     const { accessToken, refreshToken: newRefreshToken } = await refreshServices(refreshToken)
@@ -90,7 +89,6 @@ export const refreshTokenController = async (req, res) => {
     res.status(200).json({
       message: 'Token refreshed successfully',
       accessToken,
-      refreshToken: newRefreshToken,
     })
   } catch (err) {
     res.status(401).json({ message: err.message })
@@ -101,14 +99,16 @@ export const logoutController = async (req, res) => {
   try {
     res.clearCookie('accessToken', {
       httpOnly: true,
+      secure: isProd,
       sameSite: 'strict',
-      path: '/'
+      path: '/',
     });
 
     res.clearCookie('refreshToken', {
       httpOnly: true,
+      secure: isProd,
       sameSite: 'strict',
-      path: '/'
+      path: '/',
     })
     res.status(200).json({ message: 'Logged out successfully' })
   } catch (err) {

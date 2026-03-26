@@ -9,7 +9,7 @@ const app = express()
 
 // allows to share resources between different origins
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   credentials: true,
 }))
 // allows to parse the body of the request
