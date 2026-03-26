@@ -13,9 +13,7 @@ export const getUserInfoService = async (userId) => {
 
     const userData = user.toObject()
 
-    if (!userData.phone) {
-      userData.phone = "Please add your phone"
-    }
+   
 
     return {
       status: 200,

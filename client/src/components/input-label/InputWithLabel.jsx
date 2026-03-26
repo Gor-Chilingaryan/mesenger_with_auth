@@ -12,6 +12,7 @@ function InputWithLabel({
 	value,
 	changeValue,
 	onBlur,
+	placeholder = null,
 }) {
 	return (
 		<div className={`${groupStyle} ${style.input_group}`}>
@@ -27,6 +28,7 @@ function InputWithLabel({
 				value={value}
 				onChange={changeValue}
 				onBlur={onBlur}
+				placeholder={placeholder}
 			/>
 		</div>
 	)

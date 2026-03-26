@@ -50,8 +50,9 @@ function UserInfo() {
 		{
 			id: 'phone',
 			name: 'phone',
-			type: 'tel',
+			type: 'number',
 			label: 'Phone',
+			placeholder: 'Enter your phone number',
 			value: userInfo.phone,
 		},
 	]
@@ -66,7 +67,7 @@ function UserInfo() {
 				/>
 				{!disableInput && (
 					<img
-						onClick={()=>setIsModalOpen(true)}
+						onClick={() => setIsModalOpen(true)}
 						src={cameraPlusIcon}
 						className={style.addAvatarIcon}
 						alt='add avatar icon'
@@ -96,6 +97,7 @@ function UserInfo() {
 							value={field.value || ''}
 							changeValue={handleChange}
 							disabled={disableInput}
+							placeholder={field.placeholder || ''}
 						/>
 					)
 				})}
