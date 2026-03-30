@@ -4,8 +4,9 @@ import userRouter from './routes/auth.routes.js'
 import navigateRouter from './routes/navigate.routes.js'
 import userInfoRouter from './routes/userInfo.route.js'
 import cookieParser from 'cookie-parser'
-
 import chatRouter from './routes/chat.routes.js'
+import usersRouter from './routes/users.routes.js'
+
 const app = express()
 
 // allows to share resources between different origins
@@ -22,6 +23,7 @@ app.use(userRouter)
 app.use(navigateRouter)
 app.use(userInfoRouter)
 app.use(chatRouter)
+app.use(usersRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello World')
