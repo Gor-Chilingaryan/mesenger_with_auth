@@ -1,3 +1,7 @@
+/**
+ * Navigation editor hook.
+ * Handles CRUD operations, drag-and-drop ordering, and child item management.
+ */
 import { useEffect, useState } from 'react'
 import { getAllNavigation, deleteNavigationItem, createNavigationItem, updateNavigationItem, deleteChildNavigation } from '../../../api/requests/navigate'
 import {
@@ -11,6 +15,10 @@ import {
 	sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 
+/**
+ * Provides full state and actions for navigation editor UI.
+ * @returns {object} Navigation editor state and handlers.
+ */
 function useNavigationEdit() {
 	const [items, setItems] = useState([])
 	const [error, setError] = useState(null)
@@ -25,11 +33,20 @@ function useNavigationEdit() {
 		}),
 	)
 
+	/**
+	 * Updates create-item form values.
+	 * @param {React.ChangeEvent<HTMLInputElement>} e - Input change event.
+	 * @returns {void}
+	 */
 	const handleChange = (e) => {
 		const { name, value } = e.target
 		setFormData({ ...formData, [name]: value })
 	}
 
+	/**
+	 * Creates a new navigation item from form data.
+	 * @returns {Promise<void>}
+	 */
 	const handleCreateItem = async () => {
 		if (!formData.name.trim() || !formData.path.trim()) return
 
@@ -44,6 +61,11 @@ function useNavigationEdit() {
 		}
 	}
 
+	/**
+	 * Persists reordered navigation after drag-and-drop.
+	 * @param {{active: {id: string}, over?: {id: string}}} event - DnD end event.
+	 * @returns {Promise<void>}
+	 */
 	const handleDragEnd = async (event) => {
 		const { active, over } = event
 
@@ -54,8 +76,9 @@ function useNavigationEdit() {
 
 			setItems(reorderedItems)
 			try {
-				const dataToSave = reorderedItems.map((item) => ({
+				const dataToSave = reorderedItems.map((item, index) => ({
 					_id: item._id,
+					index: index + 1
 				}))
 
 				await updateNavigationItem(dataToSave)
@@ -66,6 +89,11 @@ function useNavigationEdit() {
 		}
 	}
 
+	/**
+	 * Deletes one navigation item by id.
+	 * @param {string} id - Navigation id.
+	 * @returns {Promise<void>}
+	 */
 	const handleDeleteItem = async (id) => {
 		try {
 			const response = await deleteNavigationItem(id)
@@ -78,6 +106,12 @@ function useNavigationEdit() {
 		}
 	}
 
+	/**
+	 * Deletes one child menu item from a parent entry.
+	 * @param {string} parentId - Parent navigation id.
+	 * @param {string} childId - Child menu id.
+	 * @returns {Promise<void>}
+	 */
 	const handleDeleteChild = async (parentId, childId) => {
 		try {
 			const response = await deleteChildNavigation(parentId, childId)

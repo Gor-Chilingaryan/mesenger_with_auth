@@ -1,3 +1,7 @@
+/**
+ * Avatar selection modal component.
+ * Presents predefined avatar options and returns selected avatar URL.
+ */
 import React from 'react'
 import styles from './userAvatarModal.module.css'
 
@@ -16,15 +20,30 @@ const AVATARS = [
 	'/user-images/avatar-12.jpeg',
 ]
 
+/**
+ * Displays avatar picker modal when open.
+ * @param {{isOpen: boolean, onClose: Function, onSelectAvatar: Function}} props - Modal props.
+ * @returns {JSX.Element|null} Modal content or null when closed.
+ */
 function UserAvatarModal({ isOpen, onClose, onSelectAvatar }) {
 	if (!isOpen) return null
 
+	/**
+	 * Closes modal when clicking outside content area.
+	 * @param {React.MouseEvent<HTMLDivElement>} e - Click event.
+	 * @returns {void}
+	 */
 	const handleOverlayClick = e => {
 		if (e.target === e.currentTarget) {
 			onClose()
 		}
 	}
 
+	/**
+	 * Selects avatar and closes modal.
+	 * @param {string} avatar - Selected avatar URL.
+	 * @returns {void}
+	 */
 	const handleAvatarClick = avatar => {
 		onSelectAvatar(avatar)
 		onClose()

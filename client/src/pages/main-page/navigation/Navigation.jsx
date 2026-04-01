@@ -1,3 +1,7 @@
+/**
+ * Top navigation component.
+ * Renders static and user-defined navigation links with optional child dropdowns.
+ */
 import React from 'react'
 import style from './navigation.module.css'
 import { Link } from 'react-router-dom'
@@ -5,6 +9,10 @@ import { Link } from 'react-router-dom'
 import penIcon from '../../../assets/icons/pen.svg'
 import { useNavigation } from './useNavigation'
 
+/**
+ * Displays the main app navigation bar.
+ * @returns {JSX.Element} Navigation header UI.
+ */
 function Navigation() {
 	const { navItems, error, isLoading, handleEditNavigation } = useNavigation()
 
@@ -27,10 +35,12 @@ function Navigation() {
 
 				{Array.isArray(navItems) &&
 					navItems.map(item => {
+						// Child links are rendered as dropdown when at least one child exists.
 						const hasChildren = item.childMenu && item.childMenu.length > 0
 
 						return (
 							<div key={item._id} className={style.navItem}>
+								{/* Wrapper keeps parent link and dropdown hover state connected. */}
 								<div className={style.navItemWrapper}>
 									<Link to={item.path} className={style.navItemLink}>
 										{item.name}
@@ -39,6 +49,7 @@ function Navigation() {
 
 									{hasChildren && (
 										<div className={style.dropDown}>
+											{/* Render all nested child links for this parent item. */}
 											{item.childMenu.map(child => (
 												<Link
 													to={child.path}
@@ -62,6 +73,10 @@ function Navigation() {
 	)
 }
 
+/**
+ * Chevron icon for dropdown-capable navigation items.
+ * @returns {JSX.Element} SVG icon.
+ */
 function ChevronDown() {
 	return (
 		<svg

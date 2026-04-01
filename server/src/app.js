@@ -1,30 +1,38 @@
+/**
+ * Module: app.js
+ * Description: Express application factory — configures global middleware (CORS, JSON body parsing, cookies) and mounts all API route modules.
+ * Role in request lifecycle: Central wiring layer. Every HTTP request passes through middleware registered here before reaching route handlers and controllers.
+ */
 import express from 'express'
 import cors from 'cors'
 import userRouter from './routes/auth.routes.js'
 import navigateRouter from './routes/navigate.routes.js'
 import userInfoRouter from './routes/userInfo.route.js'
+import messageRouter from './routes/message.routes.js'
 import cookieParser from 'cookie-parser'
-import chatRouter from './routes/chat.routes.js'
-import usersRouter from './routes/users.routes.js'
 
 const app = express()
 
-// allows to share resources between different origins
+// CORS: allow the browser SPA origin to call this API with cookies (Authorization via HttpOnly cookies + credentials: true).
+// CLIENT_ORIGIN must match the Vite dev server or deployed frontend URL, or the browser will block cross-origin responses.
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   credentials: true,
 }))
-// allows to parse the body of the request
 app.use(express.json())
 app.use(cookieParser())
 
-// routes
 app.use(userRouter)
 app.use(navigateRouter)
 app.use(userInfoRouter)
-app.use(chatRouter)
-app.use(usersRouter)
+app.use(messageRouter)
 
+/**
+ * Lightweight root handler for uptime checks or manual browser hits.
+ * @param {import('express').Request} req - Incoming HTTP request.
+ * @param {import('express').Response} res - Express response used to send plain text.
+ * @returns {void} Sends "Hello World" with default 200 status.
+ */
 app.get('/', (req, res) => {
   res.send('Hello World')
 })

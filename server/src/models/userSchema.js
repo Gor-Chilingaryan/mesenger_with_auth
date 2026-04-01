@@ -1,6 +1,10 @@
+/**
+ * Module: userSchema.js
+ * Description: Mongoose schema and model for application users (profile fields, credentials, validation rules).
+ * Role in request lifecycle: Persistence layer — queried by services/middleware; not invoked directly per HTTP request without going through Mongoose.
+ */
 import mongoose from 'mongoose'
 
-// creating user schema
 const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
@@ -38,16 +42,17 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required'],
     minlength: [8, 'minimum password length is 8 characters'],
     validate: {
+      /**
+       * Enforces password complexity aligned with registration/reset services (digit + special, no whitespace).
+       * @param {string} v - Plain-text password before hashing.
+       * @returns {boolean} True when the password meets the regex policy.
+       */
       validator: (v) => /^(?=.*\d)(?=.*[!@#$%^&*])\S+$/.test(v),
       message: 'Password must contain at least one number, one special character (!@#$%^&*) and no spaces.'
     }
   }
 })
 
-
-
-
-
 const userModel = mongoose.model('User', userSchema)
 
-export default userModel 
+export default userModel

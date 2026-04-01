@@ -1,9 +1,17 @@
+/**
+ * New password hook.
+ * Validates and submits password reset form for a known email.
+ */
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { newPassword } from '../../api/requests/auth'
 import { validationRules } from '../../components/validation-message/ValidationMessage'
 
 
+/**
+ * Provides password reset form state and actions.
+ * @returns {object} Reset form state and handlers.
+ */
 function useNewPassword() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -29,6 +37,10 @@ function useNewPassword() {
   const [serverError, setServerError] = useState(null)
 
 
+  /**
+   * Validates both password fields before submit.
+   * @returns {boolean} True when password and confirmation are valid.
+   */
   const validateForm = () => {
     const statuses = {
       password: validationRules.password(formData.password) ? 'valid' : 'invalid',
@@ -51,6 +63,11 @@ function useNewPassword() {
   const isFormValid = validationStatus.password === 'valid'
     && validationStatus.confirmPassword === 'valid'
 
+  /**
+   * Updates local password form state.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Input change event.
+   * @returns {void}
+   */
   const handleChange = e => {
     const { name, value } = e.target
 
@@ -58,6 +75,11 @@ function useNewPassword() {
     setValidationStatus(prev => ({ ...prev, [name]: null }))
   }
 
+  /**
+   * Validates one field on blur.
+   * @param {React.FocusEvent<HTMLInputElement>} e - Blur event.
+   * @returns {void}
+   */
   const handleBlur = e => {
     const { name, value } = e.target
     const isValid = name === 'confirmPassword'
@@ -70,6 +92,11 @@ function useNewPassword() {
     }))
   }
 
+  /**
+   * Persists new password and signs in user on success.
+   * @param {React.FormEvent<HTMLFormElement>} e - Form submit event.
+   * @returns {Promise<void>}
+   */
   const handleSavePassword = async e => {
     e.preventDefault()
 

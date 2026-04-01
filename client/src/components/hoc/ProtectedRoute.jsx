@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { checkAuth } from '../../api/requests/auth'
+/**
+ * Route guard component.
+ * Allows access only when local auth flag exists; otherwise redirects to login.
+ */
+import React from 'react'
+import { Navigate, Outlet,useLocation } from 'react-router-dom'
 
+/**
+ * Renders protected route outlet or redirect.
+ * @returns {JSX.Element} Outlet for authorized users or redirect.
+ */
 function ProtectedRoute() {
-	const [status, setStatus] = useState('checking')
+	const isLogged = localStorage.getItem('isLogged') === 'true'
 
-	useEffect(() => {
-		checkAuth()
-			.then(() => setStatus('auth'))
-			.catch(() => {
-				localStorage.removeItem('isLogged')
-				setStatus('unauth')
-			})
-	}, [])
-
-	if (status === 'checking') return <span className='loader' />
-	if (status === 'unauth') return <Navigate to='/' replace />
+	if (!isLogged) {
+		return <Navigate to='/' replace />
+	}
 
 	return <Outlet />
 }

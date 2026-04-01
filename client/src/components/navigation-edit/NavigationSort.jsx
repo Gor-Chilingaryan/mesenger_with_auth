@@ -1,10 +1,19 @@
+/**
+ * Navigation editor item components.
+ * Contains sortable row renderer and shared icon components for the editor UI.
+ */
 import React, { useState } from 'react'
-import style from '../../pages/main-page/navigation-edit/navigationEdit.module.css'
+import style from '../../pages/main-page/navigation-edit/NavigationEdit.module.css'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import InputWithLabel from '../input-label/InputWithLabel'
 import { createChildNavigation } from '../../api/requests/navigate'
 
+/**
+ * Renders one sortable navigation row with optional child menu management.
+ * @param {object} props - Sortable item props.
+ * @returns {JSX.Element} Sortable row UI.
+ */
 function SortableItem({
 	item,
 	BurgerIcon,
@@ -23,11 +32,20 @@ function SortableItem({
 		transition,
 	}
 
+	/**
+	 * Updates child creation form state.
+	 * @param {React.ChangeEvent<HTMLInputElement>} e - Input change event.
+	 * @returns {void}
+	 */
 	const handleChildInputChange = e => {
 		const { name, value } = e.target
 		setChildForm(prev => ({ ...prev, [name]: value }))
 	}
 
+	/**
+	 * Creates child navigation item and replaces updated parent locally.
+	 * @returns {Promise<void>}
+	 */
 	const onAddChildCLick = async () => {
 		if (!childForm.name || !childForm.path) return
 

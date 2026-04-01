@@ -1,3 +1,7 @@
+/**
+ * Frontend application root.
+ * Defines public and protected routes for all pages.
+ */
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ProtectedRoute } from './components/hoc/ProtectedRoute'
@@ -5,11 +9,13 @@ import { Login } from './pages/login/Login'
 import { Registration } from './pages/registration/Registration'
 import ForgotPassword from './pages/forgot-password/ForgotPassword'
 import { NewPassword } from './pages/new-password/newPassword'
-
+import { HomePage } from './pages/main-page/home-page/HomePage'
 import { NavigationEdit } from './pages/main-page/navigation-edit/NavigationEdit'
-import { Messenger } from './pages/main-page/messenger/Messenger'
-import { UserInfo } from './pages/main-page/user-info/UserInfo'
-
+import { Messenger } from './pages/messenger/Messenger'
+/**
+ * Configures top-level browser router and route tree.
+ * @returns {JSX.Element} Application routing structure.
+ */
 function App() {
 	return (
 		<BrowserRouter>
@@ -19,7 +25,7 @@ function App() {
 				<Route path='/forgot-password' element={<ForgotPassword />} />
 				<Route path='/new-password' element={<NewPassword />} />
 				<Route element={<ProtectedRoute />}>
-					<Route path='/homepage' element={<UserInfo />} />
+					<Route path='/homepage' element={<HomePage />} />
 					<Route path='/navigation-edit' element={<NavigationEdit />} />
 					<Route path='/messenger' element={<Messenger />} />
 				</Route>

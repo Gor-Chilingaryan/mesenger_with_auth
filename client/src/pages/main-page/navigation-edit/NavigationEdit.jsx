@@ -1,3 +1,7 @@
+/**
+ * Navigation editor page component.
+ * Displays create form and sortable navigation list for custom menu management.
+ */
 import React from 'react'
 import style from './navigationEdit.module.css'
 import { useNavigationEdit } from './useNavigationEdit'
@@ -12,6 +16,10 @@ import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useNavigate } from 'react-router-dom'
 
+/**
+ * Renders drag-and-drop navigation management UI.
+ * @returns {JSX.Element} Navigation editor screen.
+ */
 function NavigationEdit() {
 	const navigate = useNavigate()
 	const {

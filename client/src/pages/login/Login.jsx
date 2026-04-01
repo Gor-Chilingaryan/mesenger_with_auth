@@ -1,3 +1,7 @@
+/**
+ * Login page component.
+ * Renders sign-in form and validation feedback.
+ */
 import React from 'react'
 import style from './login.module.css'
 import { useLoginForm } from './useLoginForm'
@@ -5,6 +9,10 @@ import InputWithLabel from '../../components/input-label/InputWithLabel'
 import ValidationMessages from '../../components/validation-message/ValidationMessage'
 import { Link } from 'react-router-dom'
 
+/**
+ * Displays login form UI powered by `useLoginForm`.
+ * @returns {JSX.Element} Login screen.
+ */
 function Login() {
 	const {
 		formData,

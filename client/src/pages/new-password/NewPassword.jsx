@@ -1,9 +1,17 @@
+/**
+ * New password page component.
+ * Lets user set and confirm a new password after email verification step.
+ */
 import React from 'react'
 import style from './newPassword.module.css'
 import InputWithLabel from '../../components/input-label/InputWithLabel'
 import { Link } from 'react-router-dom'
 import useNewPassword from './useNewPassword'
 import ValidationMessages from '../../components/validation-message/ValidationMessage'
+/**
+ * Displays password reset form UI.
+ * @returns {JSX.Element} New-password screen.
+ */
 function NewPassword() {
 	const {
 		formData,

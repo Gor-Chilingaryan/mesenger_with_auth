@@ -1,6 +1,15 @@
+/**
+ * Reusable labeled input component.
+ * Standardizes markup and styling for form fields across pages.
+ */
 import React from 'react'
 import style from './inputWithLabel.module.css'
 
+/**
+ * Renders a label and input pair.
+ * @param {object} props - Component props.
+ * @returns {JSX.Element} Styled input group.
+ */
 function InputWithLabel({
 	type,
 	name,
@@ -8,7 +17,7 @@ function InputWithLabel({
 	groupStyle,
 	labelStyle,
 	inputStyle,
-	labelText = '',
+	labelText,
 	value,
 	changeValue,
 	onBlur,
@@ -16,11 +25,9 @@ function InputWithLabel({
 }) {
 	return (
 		<div className={`${groupStyle} ${style.input_group}`}>
-			{labelText.length >= 0 && (
-				<label htmlFor={name} className={`${labelStyle} ${style.label}`}>
-					{labelText}
-				</label>
-			)}
+			<label htmlFor={name} className={`${labelStyle} ${style.label}`}>
+				{labelText}
+			</label>
 			<input
 				disabled={disabled}
 				id={name}

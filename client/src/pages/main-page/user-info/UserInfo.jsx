@@ -1,12 +1,19 @@
+/**
+ * User profile page component.
+ * Displays profile details, edit controls, avatar selection, and logout action.
+ */
 import React from 'react'
 import style from './userInfo.module.css'
 import { useUserInfo } from './useUserInfo'
-import { Navigation } from '../navigation/Navigation'
 import InputWithLabel from '../../../components/input-label/InputWithLabel'
 import { Link } from 'react-router-dom'
 import cameraPlusIcon from '../../../assets/icons/camera-plus.svg'
 import UserAvatarModal from '../../../components/user-avatar-modal/userAvatarModal'
 
+/**
+ * Renders authenticated user profile form and controls.
+ * @returns {JSX.Element|null} Profile UI, loading/error state, or null.
+ */
 function UserInfo() {
 	const {
 		userInfo,
@@ -59,75 +66,70 @@ function UserInfo() {
 	]
 
 	return (
-		<>
+		<div className={style.userInfo_container}>
 			<div>
-				<Navigation />
-			</div>
-			<div className={style.userInfo_container}>
-				<div>
+				<img
+					src={userInfo.avatar || '/user-images/default_user.png'}
+					alt={'User Avatar'}
+					className={style.userInfo_avatar}
+				/>
+				{!disableInput && (
 					<img
-						src={userInfo.avatar || '/user-images/default_user.png'}
-						alt={'User Avatar'}
-						className={style.userInfo_avatar}
-					/>
-					{!disableInput && (
-						<img
-							onClick={() => setIsModalOpen(true)}
-							src={cameraPlusIcon}
-							className={style.addAvatarIcon}
-							alt='add avatar icon'
-						/>
-					)}
-				</div>
-				{isModalOpen && (
-					<UserAvatarModal
-						isOpen={isModalOpen}
-						onClose={() => setIsModalOpen(false)}
-						onSelectAvatar={url => handleAvatarChange(url)}
+						onClick={() => setIsModalOpen(true)}
+						src={cameraPlusIcon}
+						className={style.addAvatarIcon}
+						alt='add avatar icon'
 					/>
 				)}
-
-				<div className={style.userInformation}>
-					{userInfoData.map(field => {
-						return (
-							<InputWithLabel
-								key={field.id}
-								id={field.id}
-								type={field.type}
-								name={field.name}
-								groupStyle={style.input_group}
-								labelStyle={style.label}
-								inputStyle={style.input}
-								labelText={field.label}
-								value={field.value || ''}
-								changeValue={handleChange}
-								disabled={disableInput}
-								placeholder={field.placeholder || ''}
-							/>
-						)
-					})}
-				</div>
-
-				{disableInput ? (
-					<button className={style.editButton} onClick={handleDesableInput}>
-						Edit
-					</button>
-				) : (
-					<div className={style.button_group}>
-						<button className={style.cancelButton} onClick={handleDesableInput}>
-							Cancel
-						</button>
-						<button className={style.saveButton} onClick={handleSaveValues}>
-							Save
-						</button>
-					</div>
-				)}
-
-				<Link to='/' onClick={handleLogout} className={style.logoutButton}>
-					LOG OUT
-				</Link>
 			</div>
-		</>
+			{isModalOpen && (
+				<UserAvatarModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					onSelectAvatar={url => handleAvatarChange(url)}
+				/>
+			)}
+
+			<div className={style.userInformation}>
+				{userInfoData.map(field => {
+					return (
+						<InputWithLabel
+							key={field.id}
+							id={field.id}
+							type={field.type}
+							name={field.name}
+							groupStyle={style.input_group}
+							labelStyle={style.label}
+							inputStyle={style.input}
+							labelText={field.label}
+							value={field.value || ''}
+							changeValue={handleChange}
+							disabled={disableInput}
+							placeholder={field.placeholder || ''}
+						/>
+					)
+				})}
+			</div>
+
+			{disableInput ? (
+				<button className={style.editButton} onClick={handleDesableInput}>
+					Edit
+				</button>
+			) : (
+				<div className={style.button_group}>
+					<button className={style.cancelButton} onClick={handleDesableInput}>
+						Cancel
+					</button>
+					<button className={style.saveButton} onClick={handleSaveValues}>
+						Save
+					</button>
+				</div>
+			)}
+
+			<Link to='/' onClick={handleLogout} className={style.logoutButton}>
+				LOG OUT
+			</Link>
+		</div>
 	)
 }
 

@@ -1,3 +1,7 @@
+/**
+ * Forgot password page component.
+ * Collects email and starts password reset flow.
+ */
 import React from 'react'
 import style from './forgotPassword.module.css'
 import { useForgotPass } from './useForgotPass'
@@ -5,6 +9,10 @@ import InputWithLabel from '../../components/input-label/InputWithLabel'
 import ValidationMessages from '../../components/validation-message/ValidationMessage'
 import { Link } from 'react-router-dom'
 
+/**
+ * Displays forgot-password form UI.
+ * @returns {JSX.Element} Forgot-password screen.
+ */
 function ForgotPassword() {
 	const {
 		formData,

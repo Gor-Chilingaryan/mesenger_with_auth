@@ -1,3 +1,7 @@
+/**
+ * Registration page component.
+ * Renders sign-up form with field-level validation messages.
+ */
 import React from 'react'
 import style from './registration.module.css'
 import InputWithLabel from '../../components/input-label/InputWithLabel'
@@ -5,6 +9,10 @@ import { Link } from 'react-router-dom'
 import ValidationMessages from '../../components/validation-message/ValidationMessage'
 import { useRegistrationForm } from './useRegistrationForm'
 
+/**
+ * Displays user registration UI.
+ * @returns {JSX.Element} Registration screen.
+ */
 function Registration() {
 	const {
 		formData,

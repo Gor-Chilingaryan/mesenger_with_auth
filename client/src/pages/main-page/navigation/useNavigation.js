@@ -1,8 +1,16 @@
+/**
+ * Navigation hook.
+ * Fetches user navigation items and exposes redirect action to edit page.
+ */
 import { useEffect, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 import { getAllNavigation } from '../../../api/requests/navigate'
 
+/**
+ * Provides top-navigation data and actions.
+ * @returns {{navItems: Array, error: string|null, isLoading: boolean, handleEditNavigation: Function}} Hook API.
+ */
 export function useNavigation() {
   const navigate = useNavigate()
   const [navItems, setNavItems] = useState([])
@@ -25,6 +33,10 @@ export function useNavigation() {
     fetchItems()
   }, [])
 
+  /**
+   * Redirects user to navigation editor.
+   * @returns {void}
+   */
   const handleEditNavigation = () => {
     navigate('/navigation-edit')
   }
