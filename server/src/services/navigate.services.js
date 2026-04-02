@@ -3,7 +3,7 @@
  * Description: Persistence logic for custom navigation trees — list by owner, create, delete, reorder, and nested child menus.
  * Role in request lifecycle: Service layer — called from navigation controllers with explicit `userId` or item ids from params/body.
  */
-import navigateModel from "../models/navigateSchema.js"
+import navigateModel from '../models/navigateSchema.js'
 
 /**
  * Fetches all navigation documents owned by `userId`, ordered for UI display.
@@ -64,14 +64,14 @@ export const deleteNavigationService = async (id) => {
     if (!item) {
       return {
         status: 404,
-        json: { message: "Item not found" }
+        json: { message: 'Item not found' }
       }
     }
     await navigateModel.findByIdAndDelete(id)
 
     return {
       status: 200,
-      json: { message: "Item deleted Successfully" }
+      json: { message: 'Item deleted Successfully' }
     }
   } catch (err) {
     // DB/runtime errors during find/delete — 500 Internal Server Error.
@@ -120,7 +120,7 @@ export const addChildNavigationService = async (parentId, childData) => {
       { new: true, runValidators: true }
     )
     if (!updatedItem) {
-      return { status: 400, json: { message: "Parent not found to add child" } }
+      return { status: 400, json: { message: 'Parent not found to add child' } }
     }
 
     return { status: 200, json: updatedItem }

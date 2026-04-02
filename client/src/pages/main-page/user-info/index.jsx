@@ -29,7 +29,7 @@ function UserInfo() {
 		handleLogout,
 	} = useUserInfo()
 
-	if (isLoading) return <span className={style.loader}></span>
+	if (isLoading) return <span className={style.loader}/>
 	if (error) return <div className={style.error}>Error: {error}</div>
 	if (!userInfo) return null
 

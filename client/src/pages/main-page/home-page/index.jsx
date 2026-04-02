@@ -2,8 +2,7 @@
  * Home page component.
  * Composes authenticated layout with top navigation and user profile panel.
  */
-import React, { useState } from 'react'
-import style from './homePage.module.css'
+import React from 'react'
 import { Navigation } from '../navigation'
 import { UserInfo } from '../user-info'
 /**
@@ -12,11 +11,11 @@ import { UserInfo } from '../user-info'
  */
 function HomePage() {
 	return (
-		<div className={style.homePage_container}>
-			<header className={style.header}>
+		<div>
+			<header>
 				<Navigation />
 			</header>
-			<main className={style.main}>
+			<main>
 				<UserInfo />
 			</main>
 		</div>

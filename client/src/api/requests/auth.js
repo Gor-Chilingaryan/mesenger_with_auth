@@ -6,9 +6,7 @@ export const loginUser = async (userData) => {
 
     return response.data
   } catch (error) {
-
-
-    throw new Error('Login failed')
+    throw new Error(error.message || 'Login failed')
   }
 }
 
@@ -18,8 +16,7 @@ export const registerUser = async (userData) => {
 
     return response.data
   } catch (error) {
-
-    throw new Error('Registration failed')
+    throw new Error(error.message || 'Registration failed')
   }
 }
 
@@ -29,7 +26,7 @@ export const forgotPassword = async (email) => {
     console.log(response.data)
     return response.data
   } catch (error) {
-    throw new Error('Forgot password failed')
+    throw new Error(error.message || 'Forgot password failed')
   }
 
 }
@@ -40,7 +37,7 @@ export const newPassword = async (email, password) => {
 
     return response.data
   } catch (error) {
-    throw new Error('Update password failed')
+    throw new Error(error.message || 'Update password failed')
   }
 }
 

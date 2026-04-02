@@ -3,7 +3,7 @@
  * Description: HTTP handlers for user-owned navigation menus: list, create, delete, reorder, and child link management.
  * Role in request lifecycle: Controller layer — binds `req.user._id` to service calls; does not parse user id from cookies directly.
  */
-import { getAllNavigationService, createNavigationService, deleteNavigationService, updateNavigationService, addChildNavigationService, deleteChildNavigationService } from "../services/navigate.services.js"
+import { getAllNavigationService, createNavigationService, deleteNavigationService, updateNavigationService, addChildNavigationService, deleteChildNavigationService } from '../services/navigate.services.js'
 
 /**
  * Lists all navigation roots for the authenticated owner, sorted by `index`.
@@ -57,12 +57,12 @@ export const updateNaviagtionController = async (req, res) => {
     const userId = req.user._id
 
     if (!Array.isArray(newOrder)) {
-      return res.status(400).json({ message: "Order updated successfully" })
+      return res.status(400).json({ message: 'Order updated successfully' })
     }
 
     await updateNavigationService(userId, newOrder)
 
-    res.status(200).json({ message: "Navigation updated successfully" })
+    res.status(200).json({ message: 'Navigation updated successfully' })
   } catch (err) {
     // bulkWrite or DB failures — 500 Internal Server Error.
     console.error(err)

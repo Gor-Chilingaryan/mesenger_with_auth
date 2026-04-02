@@ -3,7 +3,7 @@
  * Description: Read and update operations for the authenticated user's profile document.
  * Role in request lifecycle: Service layer — receives `userId` from controllers (`req.user._id`); returns data or throws for controller mapping.
  */
-import userModel from "../models/userSchema.js"
+import userModel from '../models/userSchema.js'
 
 /**
  * Loads a single user by id and returns an HTTP-shaped result (no thrown errors for missing user).
@@ -18,7 +18,7 @@ export const getUserInfoService = async (userId) => {
     if (!user) {
       return {
         status: 404,
-        json: { message: "User not found" }
+        json: { message: 'User not found' }
       }
     }
 
@@ -42,7 +42,7 @@ export const getUserInfoService = async (userId) => {
  * @param {string|import('mongoose').Types.ObjectId} userId - Profile owner id.
  * @param {object} userBody - Partial fields from `req.body` (must not include trusted ids from client without allowlisting in production).
  * @returns {Promise<object>} Updated Mongoose document.
- * @throws {Error} `'UserNotFound'` when no document matches `userId` after update.
+ * @throws {Error} `'User not found'` when no document matches `userId` after update.
  * @throws {Error} Mongoose validation errors propagate to the controller as 500.
  */
 export const patchUserInfoService = async (userId, userBody) => {
@@ -52,7 +52,7 @@ export const patchUserInfoService = async (userId, userBody) => {
   })
 
   if (!user) {
-    throw new Error('UserNotFound')
+    throw new Error('User not found')
   }
 
   return user

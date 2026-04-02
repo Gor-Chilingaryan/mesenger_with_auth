@@ -3,7 +3,7 @@
  * Description: HTTP handlers for registration, login, password recovery/reset, JWT refresh, and logout.
  * Role in request lifecycle: Controller layer — parses cookies/body, invokes auth services, maps results and errors to HTTP status codes and JSON.
  */
-import { createUserService, loginUserService, forgotPasswordService, newPasswordService, refreshServices } from "../services/auth.services.js"
+import { createUserService, loginUserService, forgotPasswordService, newPasswordService, refreshServices } from '../services/auth.services.js'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -31,7 +31,7 @@ export const loginUserController = async (req, res) => {
     res.status(200).json({ user, accessToken })
   } catch (err) {
     // INVALID_CREDENTIALS from service — 401 Unauthorized (wrong email/password or unknown user).
-    if (err.code === "INVALID_CREDENTIALS") {
+    if (err.code === 'INVALID_CREDENTIALS') {
       return res.status(401).json({ message: err.message })
     }
 
@@ -58,7 +58,7 @@ export const registerController = async (req, res) => {
     res.status(201).json({ user, accessToken })
   } catch (err) {
     // EMAIL_EXISTS — 409 Conflict (resource already exists with same unique key).
-    if (err.code === "EMAIL_EXISTS") {
+    if (err.code === 'EMAIL_EXISTS') {
       return res.status(409).json({ message: err.message })
     }
 

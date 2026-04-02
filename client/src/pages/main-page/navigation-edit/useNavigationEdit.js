@@ -65,7 +65,7 @@ function useNavigationEdit() {
 			const newItem = response.json || response
 			setItems((prev => [...prev, newItem]))
 
-			setFormData({ name: "", path: '' })
+			setFormData({ name: '', path: '' })
 		} catch (error) {
 			setError(error.message)
 		}
@@ -92,9 +92,8 @@ function useNavigationEdit() {
 				}))
 
 				await updateNavigationItem(dataToSave)
-			} catch (error) {
-
-				throw new Error('Failed to update navigation item')
+			} catch (err) {
+				throw new Error(err.message || 'Failed to update navigation item')
 			}
 		}
 	}
@@ -106,7 +105,7 @@ function useNavigationEdit() {
 	 */
 	const handleDeleteItem = async (id) => {
 		try {
-			const response = await deleteNavigationItem(id)
+			await deleteNavigationItem(id)
 
 			setItems((prev) => prev.filter((item) => item._id !== id))
 		} catch (error) {
@@ -150,9 +149,8 @@ function useNavigationEdit() {
 					return { ...item, childMenu: nextChildMenu }
 				}),
 			)
-		} catch (error) {
-
-			throw new Error('Failed to delete child navigation')
+		} catch (err) {
+			throw new Error(err.message || 'Failed to delete child navigation')
 		}
 	}
 
