@@ -1,6 +1,7 @@
 .validation_messages {
-	margin: 0.5rem;
-	color: rgb(255, 11, 11);
-	font-size: 1rem;
+  margin-top: 0.5rem;
+  color: rgb(255, 11, 11);
+  font-size: 1rem;
+  text-align: center;
 }
 
