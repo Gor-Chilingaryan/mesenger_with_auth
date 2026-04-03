@@ -37,7 +37,7 @@ export const newPassword = async (email, password) => {
 
     return response.data
   } catch (error) {
-    throw new Error(error.message || 'Update password failed')
+    throw new Error('Update password failed')
   }
 }
 

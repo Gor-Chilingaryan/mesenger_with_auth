@@ -6,7 +6,7 @@ export const getUserInfoRequest = async () => {
 
     return response.data
   } catch (error) {
-    throw new Error(error.message || 'You dont have access to this page')
+    throw new Error('You dont have access to this page')
   }
 }
 
@@ -16,7 +16,7 @@ export const patchUserInfoRequest = async (userBody) => {
 
     return response.data
   } catch (error) {
-    throw new Error(error.message || 'Update user info failed')
+    throw new Error('Update user info failed')
   }
 }
 

@@ -6,7 +6,7 @@ export const getAllNavigation = async () => {
 
     return response.data
   } catch (error) {
-    throw new Error(error.message || 'Failed to get all navigation')
+    throw new Error( 'Failed to get all navigation')
   }
 }
 export const createNavigationItem = async (item) => {
@@ -16,7 +16,7 @@ export const createNavigationItem = async (item) => {
     return response.data
 
   } catch (error) {
-    throw new Error(error.message || 'Failed to create navigation item')
+    throw new Error('Failed to create navigation item')
   }
 }
 
@@ -27,7 +27,7 @@ export const updateNavigationItem = async (newOrder) => {
     return response.data
   } catch (error) {
 
-    throw new Error(error.message || 'Failed to update navigation item')
+    throw new Error('Failed to update navigation item')
   }
 }
 
@@ -38,7 +38,7 @@ export const deleteNavigationItem = async (id) => {
     return response.data
   } catch (error) {
 
-    throw new Error(error.message || 'Failed to delete navigation item')
+    throw new Error('Failed to delete navigation item')
   }
 }
 
@@ -49,7 +49,7 @@ export const createChildNavigation = async (id, data) => {
     return response.data
   } catch (error) {
 
-    throw new Error(error.message || 'Failed to add child navigation')
+    throw new Error('Failed to add child navigation')
   }
 }
 
@@ -60,6 +60,6 @@ export const deleteChildNavigation = async (parentId, childId) => {
     return response.data
   } catch (error) {
 
-    throw new Error(error.message ||  'Failed to delete child navigation')
+    throw new Error('Failed to delete child navigation')
   }
 }
