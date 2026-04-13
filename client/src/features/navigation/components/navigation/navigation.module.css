@@ -35,6 +35,7 @@
 .burgerActive span:nth-child(2) { opacity: 0; }
 .burgerActive span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+
 .navItems_container {
   position: fixed;
   top: 60px; 
@@ -49,6 +50,7 @@
   gap: 1.5rem;
   transition: 0.4s ease;
   overflow-y: auto;
+  z-index: 999;
 }
 
 .navOpen {
@@ -89,41 +91,54 @@
   justify-content: center;
 }
 
+.chevron {
+  margin-left: 0.5rem;
+  width: 16px;
+  transition: transform 0.3s ease;
+}
+
+/* --- ЛОГИКА ДЛЯ БОЛЬШИХ ЭКРАНОВ --- */
+
 @media (min-width: 768px) {
-  .burger {
+  
+  /* СКРЫВАЕМ БУРГЕР, ТОЛЬКО ЕСЛИ НЕТ КЛАССА forceMobile */
+  .navigation_container:not(.forceMobile) .burger {
     display: none;
   }
 
-  .navigation_container {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .navItems_container {
+  /* ГОРИЗОНТАЛЬНОЕ МЕНЮ, ТОЛЬКО ЕСЛИ НЕТ КЛАССА forceMobile */
+  .navigation_container:not(.forceMobile) .navItems_container {
     position: static;
     width: auto;
     height: auto;
     flex-direction: row;
-    gap: 6rem;
+    gap: 5rem; /* Уменьшил отступ, чтобы 4 элемента влезали лучше */
     padding: 0;
     transition: none;
     overflow: visible;
+    background: transparent;
   }
 
-  .navItem {
+  .navigation_container:not(.forceMobile) .navItem {
     position: relative;
     padding: 0.5rem;
   }
 
-  .dropDown {
+  .navigation_container:not(.forceMobile) .navItemLink {
+    font-size: 2rem; /* Стандартный размер для десктопа */
+    font-weight: 600;
+  }
+
+  /* ВЫПАДАЮЩЕЕ МЕНЮ (ХОВЕР), ТОЛЬКО ЕСЛИ НЕТ КЛАССА forceMobile */
+  .navigation_container:not(.forceMobile) .dropDown {
     position: absolute;
     top: 100%;
-    left: 40px;
+    left: 0;
     background: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.113);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 0.5rem 0;
-    padding-right: 3rem;
+    min-width: 200px;
     z-index: 100;
     opacity: 0;
     visibility: hidden;
@@ -131,22 +146,45 @@
     transition: all 0.3s ease;
   }
 
-  .navItemWrapper:hover .dropDown {
+  .navigation_container:not(.forceMobile) .navItemWrapper:hover .dropDown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
 
-  .chevron {
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-  }
-
-  .navItemWrapper:hover .chevron {
+  .navigation_container:not(.forceMobile) .navItemWrapper:hover .chevron {
     transform: rotate(180deg);
   }
 
-  .editButton {
+  .navigation_container:not(.forceMobile) .editButton {
     order: 3; 
   }
+
+  /* СПЕЦИАЛЬНЫЙ ВИД ДЛЯ forceMobile НА ДЕКСTOПЕ */
+  /* Делаем выезжающее меню не на весь экран, а аккуратной боковой панелью */
+  .forceMobile .navItems_container {
+    width: 350px;
+    border-left: 1px solid #eee;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+  }
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #a21ce0ef;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
 }
