@@ -1,13 +1,20 @@
-
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import userModel from '../models/userSchema.js'
 import { generateTokens } from '../utils/createToken.js'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
+// Создаем функцию для получения транспорта, чтобы env точно были подгружены
+const getTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+};
 export const createUserService = async (userBody) => {
   const { firstName, lastName, email, password } = userBody
 
@@ -81,10 +88,6 @@ export const loginUserService = async (userBody) => {
 }
 
 export const forgotPasswordService = async (email) => {
-  if (!email) {
-    throw new Error('Email is required')
-  }
-
   const user = await userModel.findOne({ email })
 
   if (!user) {
@@ -92,7 +95,6 @@ export const forgotPasswordService = async (email) => {
   }
 
   const resetToken = crypto.randomBytes(32).toString('hex')
-
   const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex')
 
   user.resetPasswordToken = hashedToken
@@ -101,43 +103,39 @@ export const forgotPasswordService = async (email) => {
   await user.save()
 
   const resetUrl = `${process.env.CLIENT_URL}/new-password/${resetToken}`
-  console.log('--------------------------------', resetUrl);
-  console.log('--------------------------------', user.email);
-  console.log('--------------------------------', process.env.CLIENT_URL);
-  console.log('--------------------------------', resetToken);
-  try {
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: user.email,
-      subject: 'Password Reset Request',
-      html: `
-        <div style="font-family: sans-serif; line-height: 1.5;">
-          <h2>Password Recovery</h2>
-          <p>You received this email because you requested a password reset.</p>
-          <p>Click on the button below to set a new password.:</p>
+
+  const mailOptions = {
+    from: `"Admin" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: 'Password Reset Request',
+    html: `
+      <div style="font-family: sans-serif; line-height: 1.5; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #b14ee0;">Password Recovery</h2>
+        <p>Click on the button below to set a new password:</p>
+        <div style="margin: 20px 0;">
           <a href="${resetUrl}" 
-             style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+             style="background: #b14ee0; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
             Reset password
           </a>
-          <p style="margin-top: 20px; font-size: 0.8em; color: #666;">
-          The link is valid for 1 hour.
-          </p>
         </div>
-      `,
-    })
+      </div>
+    `,
+  };
+
+  try {
+    const transporter = getTransporter(); // Вызываем создание здесь
+    const info = await transporter.sendMail(mailOptions);
     return { message: 'Password reset email sent' }
   } catch (err) {
+
     user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
+    user.resetPasswordTokenExpires = undefined;
     await user.save();
     throw new Error('Failed to send reset email', { cause: err })
   }
-
 }
 
 export const newPasswordService = async (token, password) => {
-  console.log('--- DEBUG START ---');
-  console.log('Raw Password received:', password);
 
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
   const user = await userModel.findOne({
@@ -146,22 +144,16 @@ export const newPasswordService = async (token, password) => {
   });
 
   if (!user) {
-    console.log('CRITICAL: User not found with this token!');
     throw new Error('Token is invalid or has expired');
   }
 
-  console.log('User found:', user.email);
-
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log('Hashed Password to save:', hashedPassword);
 
   user.password = hashedPassword;
   user.resetPasswordToken = null;
   user.resetPasswordTokenExpires = null;
 
   const savedUser = await user.save();
-  console.log('Saved Password in DB:', savedUser.password);
-  console.log('--- DEBUG END ---');
 
   return { message: 'Success', user: { id: user._id, email: user.email } };
 }

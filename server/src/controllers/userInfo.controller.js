@@ -27,9 +27,6 @@ export const getUserInfoController = async (req, res) => {
  */
 export const patchUserInfoController = async (req, res) => {
   try {
-    console.log('--------------------------------');
-    console.log(req.body);
-    console.log('--------------------------------');
     const updatedUser = await patchUserInfoService(req.user._id, req.body)
     
     return res.status(200).json(updatedUser)

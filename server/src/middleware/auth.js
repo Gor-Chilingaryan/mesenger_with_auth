@@ -7,9 +7,7 @@ const ACCESS_SECRET = process.env.ACCESS_SECRET
 
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log('--------------------------------');
-    console.log(req.cookies);
-    console.log('--------------------------------');
+ 
     const token = req.cookies.accessToken
 
     if (!token) {
@@ -19,13 +17,13 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, ACCESS_SECRET)
 
     const user = await userModel.findById(decoded.userId).select('-password')
-console.log('--------------------------------');
+
     if (!user) {
       return res.status(401).json({ message: 'User not found' })
     }
 
     req.user = user
-    console.log('--------------------------------',user);
+
     next();
   } catch (err) {
   
