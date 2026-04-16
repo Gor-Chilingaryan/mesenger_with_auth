@@ -1,4 +1,3 @@
-
 import React from 'react';
 import style from './messenger.module.css';
 import { useMessenger } from '@features/conversations/hook/useMessenger';
@@ -25,6 +24,7 @@ function Messenger() {
     formatTime,
     handleSend,
     handleKeyDown,
+    myInfo,
   } = useMessenger();
 
   const closeChat = () => openConversation(null);
@@ -198,7 +198,7 @@ function Messenger() {
                 </div>
               </div>
               <div>
-                <button className={style.addUserInfo}>
+                <button onClick={myInfo} className={style.addUserInfo}>
                   Share my account details
                 </button>
               </div>

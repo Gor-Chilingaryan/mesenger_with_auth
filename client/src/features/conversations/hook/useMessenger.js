@@ -37,7 +37,6 @@ export function useMessenger(currentUserId) {
   }, [activePartner])
 
   const logMarkAsReadError = useCallback((err, context) => {
-    // High-signal debug info for Axios (500s, payload, etc.)
     const status = err?.response?.status
     const statusText = err?.response?.statusText
     const responseData = err?.response?.data
@@ -205,7 +204,7 @@ export function useMessenger(currentUserId) {
         return [updateConv, ...prev.filter(c => c.user._id !== activePartner._id)]
       })
     } catch (err) {
-      console.error( err) 
+      console.error(err)
       setError('Failed to send message')
     } finally {
       setIsSending(false)
@@ -224,11 +223,11 @@ export function useMessenger(currentUserId) {
       return
     }
 
-    const timer = setTimeout(async () => { 
+    const timer = setTimeout(async () => {
       try {
         setIsSearching(true)
         const results = await searchUsers(searchQuery)
-        setSearchResults(Array.isArray(results) ? results : []) 
+        setSearchResults(Array.isArray(results) ? results : [])
       } catch {
         setSearchResults([])
       } finally {
@@ -247,6 +246,14 @@ export function useMessenger(currentUserId) {
     }
     return data.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
+  const myInfo = async (e) => {
+    e.preventDefault()
+    const data = await getUserInfoRequest()
+    console.log(data)
+    setMessageInput(`${data.firstName} ${data.lastName}, ${data.email},${data.phone || ''}`)
+
+  }
+
 
   return {
     openConversation,
@@ -267,5 +274,6 @@ export function useMessenger(currentUserId) {
     formatTime,
     handleSend,
     handleKeyDown,
+    myInfo,
   }
 }

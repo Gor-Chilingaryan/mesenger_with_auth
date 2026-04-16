@@ -1,19 +1,8 @@
-/**
- * Module: userInfo.services.js
- * Description: Read and update operations for the authenticated user's profile document.
- * Role in request lifecycle: Service layer — receives `userId` from controllers (`req.user._id`); returns data or throws for controller mapping.
- */
 import userModel from '../models/userSchema.js'
 
-/**
- * Loads a single user by id and returns an HTTP-shaped result (no thrown errors for missing user).
- * @param {string|import('mongoose').Types.ObjectId} userId - Mongo `_id` from `req.user` after auth middleware.
- * @returns {Promise<{status: number, json: object}>} `200` + user object, `404` + message, or `500` on unexpected errors.
- * @throws {void} Errors are converted to `{ status: 500 }` responses in the catch block.
- */
 export const getUserInfoService = async (userId) => {
   try {
-    const user = await userModel.findById(userId)
+    const user = await userModel.findById(userId).select('-password -resetPasswordToken -resetPasswordTokenExpires')
 
     if (!user) {
       return {
