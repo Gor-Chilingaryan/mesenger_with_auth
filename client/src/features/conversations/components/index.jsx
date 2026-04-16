@@ -21,10 +21,10 @@ function Messenger() {
     error,
     messagesEndRef,
     openConversation,
-    formatTime,
     handleSend,
     handleKeyDown,
     myInfo,
+    currentUser,
   } = useMessenger();
 
   const closeChat = () => openConversation(null);
@@ -149,7 +149,9 @@ function Messenger() {
                 )}
 
                 {messages.map((msg) => {
+
                   const isOwn = msg.sender._id !== activePartner._id;
+
                   return (
                     <div
                       key={msg._id}
@@ -158,15 +160,14 @@ function Messenger() {
                       }`}
                     >
                       {!isOwn && <Avatar user={activePartner} size={28} />}
+
+                      {isOwn && <Avatar user={currentUser} size={28} />}
                       <div
                         className={`${style.messageBubble} ${
                           isOwn ? style.ownBubble : style.theirBubble
                         }`}
                       >
                         <p className={style.messageText}>{msg.content}</p>
-                        <span className={style.messageTime}>
-                          {formatTime(msg.createdAt)}
-                        </span>
                       </div>
                     </div>
                   );

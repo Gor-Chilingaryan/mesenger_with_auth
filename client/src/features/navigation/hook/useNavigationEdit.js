@@ -103,10 +103,7 @@ function useNavigationEdit() {
 		}
 	}
 
-	/**
-	 * Accepts the full reordered tree (after drag-and-drop) and saves it.
-	 * Sends the entire tree to the backend so nesting (childMenu) and order are both persisted.
-	 */
+	
 	const handleItemReorder = async (newItems) => {
 		const normalizedItems = deriveParentIds(newItems)
 		const previousItems = itemsRef.current

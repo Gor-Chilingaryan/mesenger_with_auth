@@ -15,6 +15,7 @@ export function useMessenger(currentUserId) {
   const [resolvedUserId, setResolvedUserId] = useState(currentUserId || null)
   const [conversations, setConversations] = useState([])
   const [activePartner, setActivePartner] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
   const [messages, setMessages] = useState([])
   const [messageInput, setMessageInput] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
@@ -238,20 +239,29 @@ export function useMessenger(currentUserId) {
 
   }, [searchQuery])
 
-  function formatTime(dataStr) {
-    const data = new Date(dataStr)
-    const now = new Date()
-    if (data.toDateString() === now.toDateString()) {
-      return data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-    return data.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-  }
+
+
+  useEffect(() => {
+    let canceled = false;
+      (async () => {
+        try {
+          const me = await getUserInfoRequest()
+          if (!canceled && me) {
+            setCurrentUser(me)
+            setResolvedUserId(me._id)
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    return () => { canceled = true }
+  }, [currentUserId])
+
   const myInfo = async (e) => {
     e.preventDefault()
-    const data = await getUserInfoRequest()
-    console.log(data)
-    setMessageInput(`${data.firstName} ${data.lastName}, ${data.email},${data.phone || ''}`)
+    const { firstName, lastName, email, phone } = currentUser
 
+    setMessageInput(`${firstName} ${lastName}, ${email},${phone || ''}`)
   }
 
 
@@ -271,9 +281,10 @@ export function useMessenger(currentUserId) {
     isSending,
     error,
     messagesEndRef,
-    formatTime,
     handleSend,
     handleKeyDown,
     myInfo,
+    currentUser,
+    resolvedUserId
   }
 }
