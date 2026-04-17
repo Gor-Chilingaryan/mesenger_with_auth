@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useNavigation } from '@features/navigation/hook/useNavigation';
 import penIcon from '@assets/icons/pen.svg';
-import chevronDown from '@assets/icons/chevron-down.svg?url';
+import chevronRight from '@assets/icons/chevron-right.svg?url';
 
 import style from './navigation.module.css';
 
@@ -54,7 +54,15 @@ function DynamicNavItem({ node, onNavigate }) {
           onClick={onNavigate}
         >
           {node.title}
+          {hasChildren && (
+            <img
+              className={style.chevron}
+              src={chevronRight}
+              alt='chevron down'
+            />
+          )}
         </Link>
+
         {hasChildren && <NavDropdown parent={node} onNavigate={onNavigate} />}
       </div>
     </div>
@@ -65,7 +73,6 @@ function Navigation() {
   const { navRoots, error, isLoading, handleEditNavigation } = useNavigation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  
   const isForcedMobile = navRoots?.length > 4;
 
   const closeMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -73,7 +80,6 @@ function Navigation() {
 
   if (isLoading) return <span className={style.loader} />;
   if (error) return <div className={style.error}>{error}</div>;
-
 
   const containerClasses = `${style.navigation_container} ${isForcedMobile ? style.forceMobile : ''}`;
 
@@ -94,7 +100,6 @@ function Navigation() {
       <div
         className={`${style.navItems_container} ${isMenuOpen ? style.navOpen : ''}`}
       >
-
         <div className={style.navItem}>
           <Link to='/home' className={style.navItemLink} onClick={closeMenu}>
             Home

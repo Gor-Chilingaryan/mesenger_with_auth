@@ -1,4 +1,4 @@
-import { io } from '../../index.js'
+import { getIo } from '../socket.js'
 import mongoose from 'mongoose'
 import {
   getConversationsService,
@@ -28,7 +28,7 @@ export const sendMessage = async (req, res) => {
 
   if (result.status === 201) {
     const receiverId = req.params.partnerId.toString()
-
+    const io = getIo()
     io.to(receiverId).emit('receive_message', result.json)
   }
 
@@ -54,6 +54,7 @@ export const markAsRead = async (req, res) => {
 
   const result = await markAsReadService(userId, partnerId)
   if (result.status === 200) {
+    const io = getIo()
     io.to(partnerId.toString()).emit('messages_read', {
       readerId: userId.toString(),
     })

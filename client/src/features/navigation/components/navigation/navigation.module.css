@@ -67,8 +67,14 @@
   font-size: 1.5rem;
   text-decoration: none;
   color: #000;
+  gap: 0.5rem;
   display: flex;
   align-items: center;
+}
+
+.chevronDown {
+  width: 16px;
+  height: 16px;
 }
 
 .dropDown {
@@ -121,6 +127,9 @@
 
   .navigation_container:not(.forceMobile) .navItem {
     position: relative;
+    display: flex;
+    align-items: center;
+
     padding: 0.5rem;
   }
 
@@ -152,7 +161,7 @@
   }
 
   .navigation_container:not(.forceMobile) .navItemWrapper:hover .chevron {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
   }
 
   .navigation_container:not(.forceMobile) .editButton {
